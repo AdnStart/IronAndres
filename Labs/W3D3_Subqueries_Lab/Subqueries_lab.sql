@@ -77,3 +77,13 @@ WHERE customer_id IN(
 SELECT distinct customer_id
 FROM payment
 WHERE amount>(SELECT AVG(amount) FROM payment));
+
+
+
+SELECT first_name, last_name
+FROM customer
+WHERE customer_id IN(
+SELECT customer_id
+FROM payment 
+GROUP BY customer_id
+HAVING avg(amount)>(SELECT AVG(amount) FROM payment));
