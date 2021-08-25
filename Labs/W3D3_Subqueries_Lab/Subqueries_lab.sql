@@ -87,3 +87,19 @@ SELECT customer_id
 FROM payment 
 GROUP BY customer_id
 HAVING avg(amount)>(SELECT AVG(amount) FROM payment));
+
+
+SELECT first_name, last_name 
+FROM customer
+WHERE customer_id IN (SELECT customer_id FROM
+(
+SELECT customer_id, sum(amount) as total_paid
+FROM payment
+GROUP BY customer_id
+HAVING total_paid >
+(
+SELECT sum(total_paid)/count(distinct(customer_id))
+FROM
+(SELECT customer_id, sum(amount) as total_paid
+FROM payment
+GROUP BY customer_id) as sum_table)) as table_to_select_customer_ids);
